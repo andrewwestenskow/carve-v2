@@ -1,0 +1,87 @@
+$header-height: 50px;
+$sidebar-width: 100px;
+$player-height: 100px;
+$height-offset: calc(#{$header-height} + #{$player-height});
+$width-offset: calc(#{$sidebar-width});
+$gradient-up: linear-gradient(
+  to top,
+  #0d0c0c,
+  #181717,
+  #212121,
+  #2a2a2a,
+  #343434
+);
+$gradient-down: linear-gradient(
+  to bottom,
+  #0d0c0c,
+  #181717,
+  #212121,
+  #2a2a2a,
+  #343434
+);
+$spotify-green: #18d860;
+$first-break: 600px;
+
+@mixin spotify-scrollbar {
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+  ::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+    border: 0px none transparent;
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border: 0px none transparent;
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar-track:hover {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-track:active {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+@mixin white-border {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 80%;
+    border-bottom: 1px solid white;
+  }
+}
+
+@mixin link-cleanup {
+  color: white;
+  text-decoration: none;
+  padding: 1px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@mixin container-setup {
+  min-height: 100%;
+  padding: 25px 0 25px 25px;
+  @include spotify-scrollbar;
+}

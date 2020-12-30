@@ -1,0 +1,19 @@
+@import './reset.css';
+@import './variables.scss';
+
+* {
+  @include spotify-scrollbar;
+}
+
+.app-children {
+  height: calc(100vh - #{$height-offset});
+  width: 100vw;
+  top: $header-height;
+  position: fixed;
+  overflow-y: scroll;
+  background: $gradient-up;
+  @media screen and (max-width: $first-break) {
+    left: 0;
+    width: 100vw;
+  }
+}
