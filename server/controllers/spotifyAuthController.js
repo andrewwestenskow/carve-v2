@@ -21,7 +21,7 @@ module.exports = {
         }
 
         const { data: user } = await axios(options)
-        res.status(200).send({ tokens, user })
+        res.status(200).send({ tokens, user: extractUserInfo(user) })
       } catch (error) {
         console.log(error)
         module.exports.refresh(req, res)
@@ -79,8 +79,10 @@ module.exports = {
       const { data: user } = await axios(userOptions)
 
       res.status(200).send({
-        access_token: spotifyAuth.access_token,
-        refresh_token: spotifyAuth.refresh_token,
+        tokens: {
+          access_token: spotifyAuth.access_token,
+          refresh_token: spotifyAuth.refresh_token,
+        },
         user: extractUserInfo(user),
       })
     } catch (error) {
@@ -120,7 +122,9 @@ module.exports = {
 
       const { data: user } = await axios(userOptions)
 
-      res.status(200).send({ refreshSpotifyAuth, user })
+      res
+        .status(200)
+        .send({ tokens: req.session.tokens, user: extractUserInfo(user) })
     } catch (error) {
       console.log('ERROR REFRESHING')
       res.status(500).send('Error refreshing auth')
@@ -143,7 +147,7 @@ module.exports = {
         access_token,
         refresh_token,
       }
-      res.status(200).send({ access_token, refresh_token, user })
+      res.status(200).send({ tokens: { access_token, refresh_token }, user })
     } catch (error) {
       module.exports.refresh(req, res)
     }

@@ -17,10 +17,7 @@ const HandleCallback: React.FunctionComponent<EmptyProps> = (props) => {
     axios
       .post(`/callback?code=${code}`)
       .then((res) => {
-        setTokens({
-          access_token: res.data.access_token,
-          refresh_token: res.data.refresh_token,
-        })
+        setTokens(res.data.tokens)
         setUser(res.data.user)
         history.push(`/user/${res.data.user.name}/spotify/dashboard`)
       })

@@ -10,3 +10,8 @@ export interface User {
   image: string
   email: string
 }
+
+export interface AuthResponse {
+  user: User
+  tokens: AuthTokens
+}
