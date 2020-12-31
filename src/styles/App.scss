@@ -17,3 +17,15 @@
     width: 100vw;
   }
 }
+
+.Player {
+  width: 100vw;
+  height: $player-height;
+  position: fixed;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  bottom: 0;
+  background: $gradient-down;
+}
