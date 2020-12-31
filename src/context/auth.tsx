@@ -39,9 +39,6 @@ export const AuthProvider: React.FC = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const setTokens = useCallback((tokens: AuthTokens) => {
-    localStorage.setItem('access_token', tokens.access_token)
-    localStorage.setItem('refresh_token', tokens.refresh_token)
-
     dispatch({
       type: 'SET_TOKENS',
       payload: tokens,

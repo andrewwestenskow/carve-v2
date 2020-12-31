@@ -9,28 +9,6 @@ const {
 const extractUserInfo = require('../utils/extractUserInfo')
 
 module.exports = {
-  sessionCheck: async (req, res) => {
-    console.log('SESSION CHECK')
-    const { tokens } = req.session
-    if (tokens) {
-      try {
-        const options = {
-          url: 'https://api.spotify.com/v1/me',
-          method: 'GET',
-          headers: { Authorization: `Bearer ${tokens.access_token}` },
-        }
-
-        const { data: user } = await axios(options)
-        res.status(200).send({ tokens, user: extractUserInfo(user) })
-      } catch (error) {
-        console.log(error)
-        module.exports.refresh(req, res)
-      }
-    } else {
-      res.status(404).send('No session found')
-    }
-  },
-
   login: (req, res) => {
     console.log('LOGIN')
     const scopes =
@@ -65,11 +43,6 @@ module.exports = {
       }
       const { data: spotifyAuth } = await axios(options)
 
-      req.session.tokens = {
-        access_token: spotifyAuth.access_token,
-        refresh_token: spotifyAuth.refresh_token,
-      }
-
       const userOptions = {
         url: 'https://api.spotify.com/v1/me',
         method: 'GET',
@@ -77,6 +50,15 @@ module.exports = {
       }
 
       const { data: user } = await axios(userOptions)
+
+      res.cookie(
+        'tokens',
+        {
+          access_token: spotifyAuth.access_token,
+          refresh_token: spotifyAuth.refresh_token,
+        },
+        { signed: true }
+      )
 
       res.status(200).send({
         tokens: {
@@ -91,7 +73,7 @@ module.exports = {
   },
   refresh: async (req, res) => {
     console.log('REFRESHING')
-    const { refresh_token } = req.body
+    const { refresh_token } = req.signedCookies.tokens
     try {
       const body = {
         grant_type: 'refresh_token',
@@ -108,11 +90,14 @@ module.exports = {
       }
       const { data: refreshSpotifyAuth } = await axios(options)
 
-      req.session.tokens = {
-        access_token: refreshSpotifyAuth.access_token,
-        refresh_token:
-          refreshSpotifyAuth.refresh_token || req.body.refresh_token,
-      }
+      res.cookie(
+        'tokens',
+        {
+          access_token: refreshSpotifyAuth.access_token,
+          refresh_token: refreshSpotifyAuth.refresh_token,
+        },
+        { signed: true }
+      )
 
       const userOptions = {
         url: 'https://api.spotify.com/v1/me',
@@ -124,16 +109,20 @@ module.exports = {
 
       res
         .status(200)
-        .send({ tokens: req.session.tokens, user: extractUserInfo(user) })
+        .send({ tokens: req.signedCookies.tokens, user: extractUserInfo(user) })
     } catch (error) {
       console.log('ERROR REFRESHING')
       res.status(500).send('Error refreshing auth')
     }
   },
+  verifyCookie: async (req, res) => {
+    const { tokens } = req.signedCookies
 
-  checkLocalToken: async (req, res) => {
+    if (!tokens) {
+      return res.sendStatus(404)
+    }
     console.log('CHECKING TOKEN')
-    const { access_token, refresh_token } = req.body
+    const { access_token, refresh_token } = tokens
 
     const options = {
       url: 'https://api.spotify.com/v1/me',
@@ -143,10 +132,7 @@ module.exports = {
 
     try {
       const { data: user } = await axios(options)
-      req.session.tokens = {
-        access_token,
-        refresh_token,
-      }
+
       res.status(200).send({ tokens: { access_token, refresh_token }, user })
     } catch (error) {
       module.exports.refresh(req, res)

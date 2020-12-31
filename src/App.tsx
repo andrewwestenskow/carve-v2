@@ -18,35 +18,12 @@ function App() {
       try {
         const {
           data: { tokens, user },
-        } = await axios.get<AuthResponse>('/session')
+        } = await axios.get<AuthResponse>('/cookie')
         setTokens(tokens)
         setUser(user)
         history.push(`/user/${user.name}/spotify/dashboard`)
       } catch (error) {
-        const access_token = localStorage.getItem('access_token')
-        const refresh_token = localStorage.getItem('refresh_token')
-        if (
-          access_token &&
-          access_token !== 'undefined' &&
-          refresh_token &&
-          refresh_token !== 'undefined'
-        ) {
-          try {
-            const {
-              data: { tokens, user },
-            } = await axios.post<AuthResponse>('/token', {
-              access_token,
-              refresh_token,
-            })
-            setTokens(tokens)
-            setUser(user)
-            history.push(`/user/${user.name}/spotify/dashboard`)
-          } catch (error) {
-            history.push('/')
-          }
-        } else {
-          history.push('/')
-        }
+        history.push('/')
       }
     }
   }, [access_token, setTokens, setUser, history])
