@@ -4,12 +4,14 @@ import React, {
   useReducer,
   useCallback,
 } from 'react'
-import { AuthTokens } from 'types/util'
+import { AuthTokens, AuthResponse } from 'types/util'
+import axios from 'axios'
 
 type availableActions = 'SET_TOKENS'
 
 interface AuthState extends AuthTokens {
   setTokens: Function
+  refreshTokens: Function
 }
 
 interface AuthAction {
@@ -30,6 +32,7 @@ const initialState: AuthState = {
   access_token: '',
   refresh_token: '',
   setTokens: () => console.warn('No auth provider'),
+  refreshTokens: () => console.warn('No auth provider'),
 }
 
 const AuthContext = createContext<AuthState>(initialState)
@@ -45,8 +48,14 @@ export const AuthProvider: React.FC = (props) => {
     })
   }, [])
 
+  const refreshTokens = useCallback(() => {
+    axios.post<AuthResponse>('/refresh').then((res) => {
+      setTokens(res.data.tokens)
+    })
+  }, [setTokens])
+
   return (
-    <AuthContext.Provider value={{ ...state, setTokens }}>
+    <AuthContext.Provider value={{ ...state, setTokens, refreshTokens }}>
       {props.children}
     </AuthContext.Provider>
   )

@@ -53,7 +53,7 @@ interface SpotifyImage {
   url: string
 }
 
-interface SpotifyTrack {
+export interface SpotifyTrack {
   album: SpotifyTrackAlbum
   artists: SpotifyTrackArtist[]
   duration_ms: number
@@ -90,4 +90,14 @@ export interface SpotifyPlayerState {
     next_tracks: SpotifyTrack[]
     previous_tracks: SpotifyTrack[]
   }
+}
+
+export interface RecentTrack {
+  track: SpotifyTrack
+}
+
+export interface SpotifyAlbum {
+  uri: string
+  name: string
+  images: SpotifyImage[]
 }

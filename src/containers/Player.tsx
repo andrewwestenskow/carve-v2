@@ -27,13 +27,21 @@ const PlayerContainer: React.FC = (props) => {
 
       newPlayer.on('ready', ({ device_id }: DeviceInfo) => {
         setPlayer(newPlayer)
-        console.log(device_id)
-        console.log(newPlayer)
       })
 
       newPlayer.on('initialization_error', (e: any) => {
         console.error(e)
         console.warn('INITIALIZATION ERROR')
+      })
+
+      newPlayer.on('authentication_error', (e: any) => {
+        console.error(e)
+        console.warn('AUTHENTICATION ERROR')
+      })
+
+      newPlayer.on('playback_error', (e: any) => {
+        console.error(e)
+        console.warn('PLAYBACK ERROR')
       })
 
       newPlayer.on('player_state_changed', (state: SpotifyPlayerState) => {

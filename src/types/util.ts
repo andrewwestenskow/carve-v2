@@ -15,3 +15,14 @@ export interface AuthResponse {
   user: User
   tokens: AuthTokens
 }
+
+type httpMethods = 'GET' | 'POST' | 'PUT' | 'DELETE'
+
+type query = Record<any, string>
+
+export interface SpotifyRequest {
+  url: string
+  method: httpMethods
+  queries: query[]
+  format: Function
+}

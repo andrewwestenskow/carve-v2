@@ -3,16 +3,22 @@ import { Route, Switch } from 'react-router-dom'
 import Login from 'components/Auth/Login'
 import HandleCallback from 'components/Auth/HandleCallback'
 import AppContainer from 'containers/AppContainer'
+import DashboardContainer from 'containers/Dashboard'
 
 export default (
   <Switch>
     <Route exact path="/" component={Login} />
     <Route path="/callback" component={HandleCallback} />
     <Route
-      path="/user/:email"
+      path="/user/:name"
       render={() => (
         <AppContainer>
-          <div>HI THERE</div>
+          <Switch>
+            <Route
+              path="/user/:name/spotify/dashboard"
+              component={DashboardContainer}
+            />
+          </Switch>
         </AppContainer>
       )}
     />

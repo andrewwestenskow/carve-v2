@@ -94,7 +94,7 @@ module.exports = {
         'tokens',
         {
           access_token: refreshSpotifyAuth.access_token,
-          refresh_token: refreshSpotifyAuth.refresh_token,
+          refresh_token: refreshSpotifyAuth.refresh_token || refresh_token,
         },
         { signed: true }
       )
@@ -112,7 +112,7 @@ module.exports = {
         .send({ tokens: req.signedCookies.tokens, user: extractUserInfo(user) })
     } catch (error) {
       console.log('ERROR REFRESHING')
-      res.status(500).send('Error refreshing auth')
+      res.status(500).send({ message: 'Error refreshing auth', error: error })
     }
   },
   verifyCookie: async (req, res) => {
