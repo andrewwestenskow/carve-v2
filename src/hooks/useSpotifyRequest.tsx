@@ -38,37 +38,39 @@ function useSpotifyRequest<Response, Return = Response>(
   )
 
   useEffect(() => {
-    axios(options)
-      .then((res) => {
-        ReactDOM.unstable_batchedUpdates(() => {
-          formatAndSetData(res.data.items)
-          setIsLoading(false)
+    if (access_token) {
+      axios(options)
+        .then((res) => {
+          ReactDOM.unstable_batchedUpdates(() => {
+            formatAndSetData(res.data)
+            setIsLoading(false)
+          })
         })
-      })
-      .catch(() => {
-        console.log('ATTEMPTING AUTH REFRESH')
-        axios.post<AuthResponse>('/refresh').then((res) => {
-          const newOptions = {
-            ...options,
-            headers: {
-              Authorization: `Bearer ${res.data.tokens.access_token}`,
-            },
-          }
-          setTokens(res.data.tokens)
-          console.log(newOptions)
-          axios(newOptions)
-            .then((res) => {
-              ReactDOM.unstable_batchedUpdates(() => {
-                formatAndSetData(res.data.items)
-                setIsLoading(false)
+        .catch(() => {
+          console.log('ATTEMPTING AUTH REFRESH')
+          axios.post<AuthResponse>('/refresh').then((res) => {
+            const newOptions = {
+              ...options,
+              headers: {
+                Authorization: `Bearer ${res.data.tokens.access_token}`,
+              },
+            }
+            setTokens(res.data.tokens)
+            console.log(newOptions)
+            axios(newOptions)
+              .then((res) => {
+                ReactDOM.unstable_batchedUpdates(() => {
+                  formatAndSetData(res.data)
+                  setIsLoading(false)
+                })
               })
-            })
-            .catch(() => {
-              console.warn('REQUEST FAILED AFTER ATTEMPTED AUTH REFRESH')
-            })
+              .catch(() => {
+                console.warn('REQUEST FAILED AFTER ATTEMPTED AUTH REFRESH')
+              })
+          })
         })
-      })
-  }, [options])
+    }
+  }, [options, access_token, formatAndSetData, setTokens])
 
   return { data, isLoading }
 }

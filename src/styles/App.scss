@@ -29,3 +29,7 @@
   bottom: 0;
   background: $gradient-down;
 }
+
+@import './layout';
+@import './typography';
+@import './albumPreview';

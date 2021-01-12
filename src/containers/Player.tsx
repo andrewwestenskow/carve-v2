@@ -6,10 +6,14 @@ import {
   DeviceInfo,
   SpotifyPlayerState,
 } from 'types/player'
+// import useSpotifyRequest from 'hooks/useSpotifyRequest'
+// import { currentlyPlaying } from 'spotify/requests'
 
 const PlayerContainer: React.FC = (props) => {
   const { access_token } = useAuth()
   const [player, setPlayer] = useState<SpotifyPlayer>(defaultSpotifyPlayer)
+
+  // const { data } = useSpotifyRequest(currentlyPlaying)
 
   const checkForPlayer = () => {
     if (window.Spotify !== null && !player._options.id && access_token) {

@@ -1,0 +1,15 @@
+@mixin textBase {
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+.secondary-label {
+  @include textBase;
+  font-size: 18px;
+}
+
+.primary-label {
+  @include textBase();
+  font-size: 24px;
+}

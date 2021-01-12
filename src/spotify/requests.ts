@@ -1,14 +1,23 @@
 import { SpotifyRequest } from 'types/util'
-import { RecentTrack, SpotifyAlbum } from 'types/player'
+import { RecentTrack, SpotifyAlbumPreview } from 'types/player'
+
+export const currentlyPlaying: SpotifyRequest = {
+  url: '/me/player',
+  method: 'GET',
+  queries: [],
+  format: (item: any) => {
+    return item
+  },
+}
 
 export const recentTracks: SpotifyRequest = {
   url: '/me/player/recently-played',
   method: 'GET',
   queries: [{ limit: '50' }],
-  format: (items: any) => {
-    return items.reduce((acc: SpotifyAlbum[], track: RecentTrack) => {
+  format: ({ items }: any) => {
+    return items.reduce((acc: SpotifyAlbumPreview[], track: RecentTrack) => {
       const inArray = acc.some(
-        (e: SpotifyAlbum) => e.uri === track.track.album.uri
+        (e: SpotifyAlbumPreview) => e.uri === track.track.album.uri
       )
 
       if (!inArray) {

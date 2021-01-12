@@ -85,3 +85,9 @@ $first-break: 600px;
   padding: 25px 0 25px 25px;
   @include spotify-scrollbar;
 }
+
+@mixin row {
+  display: flex;
+  width: 100%;
+  padding: 25px;
+}

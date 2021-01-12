@@ -55,7 +55,7 @@ interface SpotifyImage {
 
 export interface SpotifyTrack {
   album: SpotifyTrackAlbum
-  artists: SpotifyTrackArtist[]
+  artists: SpotifyTrackArtistPreview[]
   duration_ms: number
   id: string
   is_playable: boolean
@@ -67,11 +67,6 @@ export interface SpotifyTrack {
 
 interface SpotifyTrackAlbum {
   images: SpotifyImage[]
-  name: string
-  uri: string
-}
-
-interface SpotifyTrackArtist {
   name: string
   uri: string
 }
@@ -96,8 +91,25 @@ export interface RecentTrack {
   track: SpotifyTrack
 }
 
-export interface SpotifyAlbum {
+export interface SpotifyAlbumPreview {
   uri: string
   name: string
   images: SpotifyImage[]
+}
+
+export interface SpotifyAlbum extends SpotifyAlbumPreview {
+  release_date: string
+  total_tracks: number
+  id: string
+  album_type: string
+  artists: SpotifyTrackArtist[]
+}
+
+interface SpotifyTrackArtistPreview {
+  name: string
+  uri: string
+}
+
+export interface SpotifyTrackArtist extends SpotifyTrackArtistPreview {
+  id: string
 }
