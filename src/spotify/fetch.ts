@@ -1,21 +1,14 @@
 import { SpotifyAlbumPreview, RecentTrack } from 'types/player'
 
+const BASE_URL = 'https://api.spotify.com/v1'
+
 export const getDashboardData = async (request: Function) => {
-  const { items, next } = await request({
-    url: '/me/player/recently-played?limit=50',
+  const { items } = await request({
+    url: BASE_URL + '/me/player/recently-played?limit=50',
     method: 'GET',
   })
 
-  // const data = await request({
-  //   url: next,
-  //   method: 'GET',
-  // })
-
-  // console.log(data)
-
-  const recent = [...items]
-
-  const formattedRecent = recent.reduce(
+  const formattedRecent = items.reduce(
     (acc: SpotifyAlbumPreview[], track: RecentTrack) => {
       const inArray = acc.some(
         (e: SpotifyAlbumPreview) => e.uri === track.track.album.uri

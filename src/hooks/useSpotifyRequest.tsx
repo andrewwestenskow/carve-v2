@@ -13,7 +13,6 @@ const useSpotifyRequest = () => {
     async (options: AxiosRequestConfig) => {
       const fullOptions: AxiosRequestConfig = {
         ...options,
-        url: `https://api.spotify.com/v1${options.url}`,
         headers,
       }
 
