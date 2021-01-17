@@ -48,8 +48,8 @@ export const AuthProvider: React.FC = (props) => {
     })
   }, [])
 
-  const refreshTokens = useCallback(() => {
-    axios.post<AuthResponse>('/refresh').then((res) => {
+  const refreshTokens = useCallback(async () => {
+    return axios.post<AuthResponse>('/refresh').then((res) => {
       setTokens(res.data.tokens)
     })
   }, [setTokens])
