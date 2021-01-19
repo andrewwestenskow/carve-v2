@@ -1,19 +1,29 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import useAuth from 'context/auth'
 import useDevice from 'context/device'
+import useRequest from 'hooks/useSpotifyRequest'
+import { getCurrentlyPlaying, getUserDevices } from 'spotify/fetch'
 import {
   SpotifyPlayer,
   defaultSpotifyPlayer,
   DeviceInfo,
   SpotifyPlayerState,
 } from 'types/player'
+import withSpotify from 'hocs/withSpotify'
 
 const PlayerContainer: React.FC = (props) => {
-  const { access_token } = useAuth()
+  const { access_token, refreshTokens } = useAuth()
   const { setDeviceId } = useDevice()
   const [player, setPlayer] = useState<SpotifyPlayer>(defaultSpotifyPlayer)
+  const [playerState, setPlayerState] = useState<
+    SpotifyPlayerState | Record<any, any>
+  >({})
+  const [devices, setDevices] = useState([])
 
-  const checkForPlayer = () => {
+  const request = useRequest()
+
+  const connectToPlayer = () => {
     if (window.Spotify !== null && !player._options.id && access_token) {
       const newPlayer: SpotifyPlayer = new window.Spotify.Player({
         name: 'Carve',
@@ -21,15 +31,20 @@ const PlayerContainer: React.FC = (props) => {
           cb(access_token)
         },
       })
-      clearInterval(checkInterval)
+
       newPlayer
         .connect()
         .then()
         .catch((err: any) => console.log(err))
 
       newPlayer.on('ready', ({ device_id }: DeviceInfo) => {
-        setPlayer(newPlayer)
-        setDeviceId(device_id)
+        getUserDevices(request).then((devices) => {
+          ReactDOM.unstable_batchedUpdates(() => {
+            setDevices(devices)
+            setPlayer(newPlayer)
+            setDeviceId(device_id)
+          })
+        })
       })
 
       newPlayer.on('initialization_error', (e: any) => {
@@ -40,6 +55,10 @@ const PlayerContainer: React.FC = (props) => {
       newPlayer.on('authentication_error', (e: any) => {
         console.error(e)
         console.warn('AUTHENTICATION ERROR')
+        newPlayer.disconnect()
+        refreshTokens().then(() => {
+          connectToPlayer()
+        })
       })
 
       newPlayer.on('playback_error', (e: any) => {
@@ -48,16 +67,21 @@ const PlayerContainer: React.FC = (props) => {
       })
 
       newPlayer.on('player_state_changed', (state: SpotifyPlayerState) => {
-        console.log(state)
+        if (state.track_window) {
+          document.title = `${state.track_window.current_track.artists[0].name} - ${state.track_window.current_track.name}`
+          let favicon: any = document.querySelector("link[rel*='icon']")
+          favicon.href = state.track_window.current_track.album.images[0].url
+        }
+        setPlayerState(state)
       })
     }
   }
 
-  const checkInterval = setInterval(() => {
-    checkForPlayer()
-  }, 1000)
+  useEffect(() => {
+    connectToPlayer()
+  }, [])
 
   return <div className="Player">Hello</div>
 }
 
-export default PlayerContainer
+export default withSpotify(PlayerContainer)

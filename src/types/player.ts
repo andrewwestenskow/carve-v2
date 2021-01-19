@@ -1,6 +1,7 @@
 declare global {
   interface Window {
     Spotify: any
+    isSpotifyReady: boolean
   }
 }
 
@@ -34,12 +35,14 @@ export const defaultSpotifyPlayer: SpotifyPlayer = {
   },
   on: (action, cb) => playerFallback(),
   connect: async () => playerFallback(),
+  disconnect: async () => playerFallback(),
 }
 
 export interface SpotifyPlayer {
   _options: SpotifyPlayerOptions
   on: (action: playerActions, cb: Function) => void
   connect: () => Promise<void>
+  disconnect: () => Promise<void>
 }
 
 interface PlayerContext {
