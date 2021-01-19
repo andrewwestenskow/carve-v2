@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import NowPlaying from 'components/Player/NowPlaying'
 import useAuth from 'context/auth'
 import useDevice from 'context/device'
 import useRequest from 'hooks/useSpotifyRequest'
-import { getCurrentlyPlaying, getUserDevices } from 'spotify/fetch'
+import { getUserDevices } from 'spotify/fetch'
 import {
   SpotifyPlayer,
   defaultSpotifyPlayer,
@@ -16,9 +17,9 @@ const PlayerContainer: React.FC = (props) => {
   const { access_token, refreshTokens } = useAuth()
   const { setDeviceId } = useDevice()
   const [player, setPlayer] = useState<SpotifyPlayer>(defaultSpotifyPlayer)
-  const [playerState, setPlayerState] = useState<
-    SpotifyPlayerState | Record<any, any>
-  >({})
+  const [playerState, setPlayerState] = useState<SpotifyPlayerState | null>(
+    null
+  )
   const [devices, setDevices] = useState([])
 
   const request = useRequest()
@@ -81,7 +82,13 @@ const PlayerContainer: React.FC = (props) => {
     connectToPlayer()
   }, [])
 
-  return <div className="Player">Hello</div>
+  return playerState ? (
+    <div className="Player">
+      <NowPlaying current_track={playerState.track_window.current_track} />
+    </div>
+  ) : (
+    <div>FALLBACK HERE</div>
+  )
 }
 
 export default withSpotify(PlayerContainer)

@@ -1,8 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400&display=swap');
 @import './reset.css';
 @import './variables.scss';
 
 * {
   @include spotify-scrollbar;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+  font-weight: 100;
 }
 
 .app-children {
@@ -33,3 +39,4 @@
 @import './layout';
 @import './typography';
 @import './albumPreview';
+@import './Player';
