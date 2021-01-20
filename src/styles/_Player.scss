@@ -17,3 +17,23 @@
     }
   }
 }
+
+.AvailableDevices {
+  position: relative;
+  .device-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100px;
+    max-height: 300px;
+    width: 200px;
+    padding: 10px;
+    position: absolute;
+    overflow: auto;
+    border: 1px solid white;
+    border-radius: 5px;
+    background: $gradient-up;
+    left: -75px;
+    transition: all 100ms;
+  }
+}

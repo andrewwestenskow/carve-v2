@@ -1,4 +1,4 @@
-import { SpotifyAlbumPreview, RecentTrack } from 'types/player'
+import { SpotifyAlbumPreview, RecentTrack, AvailableDevice } from 'types/player'
 
 const BASE_URL = 'https://api.spotify.com/v1'
 
@@ -8,7 +8,9 @@ export const getCurrentlyPlaying = async (request: Function) => {
 }
 
 export const getUserDevices = async (request: Function) => {
-  const { devices } = await request({ url: BASE_URL + '/me/player/devices' })
+  const { devices }: { devices: AvailableDevice[] } = await request({
+    url: BASE_URL + '/me/player/devices',
+  })
   return devices
 }
 

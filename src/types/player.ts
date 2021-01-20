@@ -9,6 +9,15 @@ export interface DeviceInfo {
   device_id: string
 }
 
+export interface AvailableDevice {
+  id: string
+  is_active: boolean
+  is_private_session: boolean
+  name: string
+  type: string
+  volume_percent: number
+}
+
 interface SpotifyPlayerOptions {
   name: string
   id: string
