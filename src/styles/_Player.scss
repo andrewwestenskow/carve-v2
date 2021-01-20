@@ -23,17 +23,35 @@
   .device-list {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    min-height: 100px;
-    max-height: 300px;
+    height: 250px;
     width: 200px;
-    padding: 10px;
+    padding: 10px 0;
     position: absolute;
     overflow: auto;
-    border: 1px solid white;
+    border: 1px solid $subtle-border;
     border-radius: 5px;
-    background: $gradient-up;
+    background-color: $dark-grey;
     left: -75px;
     transition: all 100ms;
+    top: -255px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    .device {
+      padding: 10px;
+      cursor: pointer;
+      &:hover {
+        background-color: $lighter-grey;
+      }
+      .device-name {
+        font-size: 18px;
+        font-weight: 400;
+        @include truncate;
+      }
+      .device-type {
+        font-size: 12px;
+      }
+    }
+    .active-device {
+      color: $spotify-green;
+    }
   }
 }

@@ -11,6 +11,8 @@ export const getUserDevices = async (request: Function) => {
   const { devices }: { devices: AvailableDevice[] } = await request({
     url: BASE_URL + '/me/player/devices',
   })
+
+  devices.sort((a, b) => (a.is_active ? -1 : 1))
   return devices
 }
 

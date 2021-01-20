@@ -18,27 +18,20 @@ const iconStyle: CSS.Properties = {
 }
 
 const DeviceList: React.FC<ADProps> = (props) => {
-  const deviceList = useRef<HTMLDivElement>(null)
-  const [top, setTop] = useState(100)
-
-  useEffect(() => {
-    if (deviceList.current) {
-      console.dir(deviceList.current)
-      setTop(deviceList.current.offsetHeight)
-    }
-  }, [deviceList])
-
   return (
-    <div
-      className="device-list"
-      ref={deviceList}
-      style={{ top: `-${top + 5}px` }}
-    >
+    <div className="device-list">
       <p className="primary-label list-heading">Available Devices</p>
       {props.isLoading ? (
         <p>Loading</p>
       ) : (
-        props.devices.map((device) => <p>{device.name}</p>)
+        props.devices.map((device) => (
+          <div
+            className={`${device.is_active ? 'active-device' : null} device`}
+          >
+            <p className="device-name">{device.name}</p>
+            <p className="device-type">{device.type}</p>
+          </div>
+        ))
       )}
     </div>
   )
@@ -67,9 +60,9 @@ const AvailableDevices: React.FC = (props) => {
     <div className="AvailableDevices">
       <MdPhonelink onClick={handleToggle} style={iconStyle} />
       {showList && (
-        <Dismisser onDismiss={() => setShowList(false)}>
-          <DeviceList devices={devices} isLoading={isLoading} />
-        </Dismisser>
+        // <Dismisser onDismiss={() => setShowList(false)}>
+        <DeviceList devices={devices} isLoading={isLoading} />
+        // </Dismisser>
       )}
     </div>
   )

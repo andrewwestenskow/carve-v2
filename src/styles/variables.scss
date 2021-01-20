@@ -20,7 +20,12 @@ $gradient-down: linear-gradient(
   #343434
 );
 $spotify-green: #18d860;
+$dark-grey: #1c1c1c;
+$lighter-grey: #393939;
+$subtle-border: rgba(255, 255, 255, 0.058);
 $first-break: 600px;
+$box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
 @mixin spotify-scrollbar {
   ::-webkit-scrollbar {
@@ -90,4 +95,11 @@ $first-break: 600px;
   display: flex;
   width: 100%;
   padding: 25px;
+}
+
+@mixin truncate {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
