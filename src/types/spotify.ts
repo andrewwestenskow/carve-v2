@@ -1,28 +1,32 @@
 //- ALBUMS
 
 type albumTypes = 'album' | 'single' | 'compilation'
-
-export interface SpotifyAlbum {
+type precisions = 'year' | 'month' | 'day'
+interface SpotifySimplifiedAlbum {
   album_type: albumTypes
-  artists: SpotifyArtist[]
-  external_ids: SpotifyExternalId
-  external_urls: SpotifyExternalUrl
+  artists: SpotifySimplifiedArtist[]
   available_markets: string[]
-  genres: string[]
-  id: string
+  external_urls: SpotifyExternalUrl
   href: string
+  id: string
   images: SpotifyImage[]
-  label: string
   name: string
-  popularity: number
   release_date: string
+  release_date_precision: precisions
   restrictions?: SpotifyAlbumRestrictions
-  tracks: SpotifySimplifiedTrack[]
   type: 'album'
   uri: string
 }
 
-interface SpotifySimplifiedAlbum {}
+export interface SpotifyAlbum extends SpotifySimplifiedAlbum {
+  artists: SpotifyArtist[]
+  external_ids: SpotifyExternalId
+  available_markets: string[]
+  genres: string[]
+  label: string
+  popularity: number
+  tracks: SpotifySimplifiedTrack[]
+}
 
 interface SpotifySavedAlbum {
   added_at: string
@@ -37,26 +41,49 @@ interface SpotifyAlbumRestrictions {
 
 //-ARTISTS
 
-interface SpotifyArtist {
+interface SpotifySimplifiedArtist {
   external_urls: SpotifyExternalUrl
-  genres: string[]
-  followers: SpotifyFollowers
   href: string
   id: string
-  images: SpotifyImage[]
   name: string
-  popularity: number
   type: 'artist'
   uri: string
 }
 
-interface SpotifySimplifiedArtist {}
+interface SpotifyArtist extends SpotifySimplifiedArtist {
+  genres: string[]
+  followers: SpotifyFollowers
+  images: SpotifyImage[]
+  popularity: number
+}
 
 //-TRACKS
 
-interface SpotifyTrack {}
+interface SpotifySimplifiedTrack {
+  artists: SpotifySimplifiedArtist[]
+  available_markets: string[]
+  disc_number: number
+  duration_ms: number
+  explicit: boolean
+  external_urls: SpotifyExternalUrl
+  href: string
+  id: string
+  is_local: boolean
+  is_playable: boolean
+  linked_from: SpotifyLinkedTrack
+  name: string
+  preview_url: string
+  track_number: number
+  type: 'track'
+  uri: string
+}
 
-interface SpotifySimplifiedTrack {}
+interface SpotifyTrack extends SpotifySimplifiedTrack {
+  album: SpotifySimplifiedAlbum
+  artists: SpotifyArtist[]
+  external_ids: SpotifyExternalId
+  popularity: number
+}
 
 interface SpotifyPlaylistTrack {
   added_at: string
@@ -65,17 +92,21 @@ interface SpotifyPlaylistTrack {
   track: SpotifyTrack | SpotifyEpisode
 }
 
+interface SpotifyPlaylistTracksRef {
+  href: string
+  total: number
+}
+
+//-SHOWS
+
 interface SpotifySavedShow {
   added_at: string
   track: SpotifyTrack
 }
 
-//-SHOWS
-
-interface SpotifyShow {
+interface SpotifySimplifiedShow {
   available_markets: string[]
   description: string
-  episodes: SpotifySimplifiedEpisode[]
   explicit: boolean
   external_urls: SpotifyExternalUrl
   href: string
@@ -90,7 +121,9 @@ interface SpotifyShow {
   uri: string
 }
 
-interface SpotifySimplifiedShow {}
+interface SpotifyShow extends SpotifySimplifiedShow {
+  episodes: SpotifySimplifiedEpisode[]
+}
 
 interface SpotifySavedShow {
   added_at: string
@@ -99,7 +132,7 @@ interface SpotifySavedShow {
 
 //-EPISODES
 
-interface SpotifyEpisode {
+interface SpotifySimplifiedEpisode {
   audio_preview_url: string
   description: string
   duration_ms: number
@@ -113,15 +146,33 @@ interface SpotifyEpisode {
   languages: string[]
   name: string
   release_date: string
+  release_date_precision: precisions
   resume_point: SpotifyResumePoint
-  show: SpotifySimplifiedShow
   type: 'episode'
   uri: string
 }
 
-interface SpotifySimplifiedEpisode {}
+interface SpotifyEpisode extends SpotifySimplifiedEpisode {
+  show: SpotifySimplifiedShow
+}
 
 //-PLAYLISTS
+
+interface SpotifySimplifiedPlaylist {
+  collaborative: boolean
+  description: string
+  external_urls: SpotifyExternalUrl
+  href: string
+  id: string
+  images: SpotifyImage[]
+  name: string
+  owner: SpotifyPublicUser
+  public: boolean
+  snapshot_id: string
+  tracks: SpotifyPlaylistTracksRef
+  type: 'playlist'
+  uri: string
+}
 
 interface SpotifyPlaylist {
   collaborative: boolean
@@ -139,8 +190,6 @@ interface SpotifyPlaylist {
   type: 'playlist'
   uri: string
 }
-
-interface SpotifySimplifiedPlaylist {}
 
 //-DEVICES
 
