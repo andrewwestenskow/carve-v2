@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { MdPhonelink } from 'react-icons/md'
-import { AvailableDevice } from 'types/player'
+import { SpotifyDevice } from 'types/spotify'
 import CSS from 'csstype'
 import { getUserDevices } from 'spotify/fetch'
 import useSpotifyRequest from 'hooks/useSpotifyRequest'
@@ -8,13 +8,13 @@ import { transferPlayback } from 'spotify/act'
 import Dismisser from 'components/util/Dismisser'
 
 interface ADProps {
-  devices: AvailableDevice[]
+  devices: SpotifyDevice[]
   isLoading: Boolean
   setShowList: Function
 }
 
 interface DProps {
-  device: AvailableDevice
+  device: SpotifyDevice
   setShowList: Function
 }
 
@@ -65,7 +65,7 @@ const DeviceList: React.FC<ADProps> = (props) => {
 const AvailableDevices: React.FC = (props) => {
   const [showList, setShowList] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [devices, setDevices] = useState<AvailableDevice[]>([])
+  const [devices, setDevices] = useState<SpotifyDevice[]>([])
   const request = useSpotifyRequest()
 
   function handleToggle() {
@@ -73,11 +73,11 @@ const AvailableDevices: React.FC = (props) => {
       setShowList(false)
     } else {
       setIsLoading(true)
-      // getUserDevices(request).then((devices) => {
-      //   setShowList(true)
-      //   setDevices(devices)
-      //   setIsLoading(false)
-      // })
+      getUserDevices(request).then((devices) => {
+        setShowList(true)
+        setDevices(devices)
+        setIsLoading(false)
+      })
     }
   }
 

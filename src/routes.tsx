@@ -4,6 +4,8 @@ import Login from 'components/Auth/Login'
 import HandleCallback from 'components/Auth/HandleCallback'
 import AppContainer from 'containers/AppContainer'
 import DashboardContainer from 'containers/Dashboard'
+import { DeviceProvider } from 'context/device'
+import { NowPlayingProvider } from 'context/nowPlaying'
 
 export default (
   <Switch>
@@ -12,14 +14,18 @@ export default (
     <Route
       path="/user/:name"
       render={() => (
-        <AppContainer>
-          <Switch>
-            <Route
-              path="/user/:name/spotify/dashboard"
-              component={DashboardContainer}
-            />
-          </Switch>
-        </AppContainer>
+        <DeviceProvider>
+          <NowPlayingProvider>
+            <AppContainer>
+              <Switch>
+                <Route
+                  path="/user/:name/spotify/dashboard"
+                  component={DashboardContainer}
+                />
+              </Switch>
+            </AppContainer>
+          </NowPlayingProvider>
+        </DeviceProvider>
       )}
     />
   </Switch>

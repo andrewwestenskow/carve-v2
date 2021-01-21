@@ -1,22 +1,12 @@
 import {
   SpotifyHistory,
   SpotifyDevices,
-  SpotifyCurrentlyPlayingContext,
   SpotifyCursorPaging,
-  SpotifyTrack,
   SpotifySimplifiedAlbum,
 } from 'types/spotify'
 import { Request } from 'hooks/useSpotifyRequest'
 
-const BASE_URL = 'https://api.spotify.com/v1'
-
-export const getCurrentlyPlaying = async (request: Request) => {
-  const info = await request<SpotifyCurrentlyPlayingContext>({
-    url: BASE_URL + '/me/player',
-    method: 'GET',
-  })
-  return info
-}
+export const BASE_URL = 'https://api.spotify.com/v1'
 
 export const getUserDevices = async (request: Request) => {
   const { devices } = await request<SpotifyDevices>({

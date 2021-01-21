@@ -5,16 +5,13 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { UserProvider } from 'context/user'
 import { AuthProvider } from 'context/auth'
-import { DeviceProvider } from 'context/device'
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
         <AuthProvider>
-          <DeviceProvider>
-            <App />
-          </DeviceProvider>
+          <App />
         </AuthProvider>
       </UserProvider>
     </BrowserRouter>

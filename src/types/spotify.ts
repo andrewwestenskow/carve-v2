@@ -194,7 +194,7 @@ interface SpotifyPlaylist {
 
 //-DEVICES
 
-interface SpotifyDevice {
+export interface SpotifyDevice {
   id: string
   is_active: boolean
   is_private_session: boolean

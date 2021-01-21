@@ -28,7 +28,7 @@ function reducer(state: DeviceState, action: DeviceAction) {
 
 const initialState: DeviceState = {
   device_id: '',
-  setDeviceId: () => console.warn('No auth provider'),
+  setDeviceId: () => console.warn('No device provider'),
 }
 
 const DeviceContext = createContext<DeviceState>(initialState)

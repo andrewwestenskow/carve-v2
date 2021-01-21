@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react'
-
 import NowPlaying from 'components/Player/NowPlaying'
 import AvailableDevices from 'components/Player/AvailableDevices'
 import useAuth from 'context/auth'
 import useDevice from 'context/device'
 import useRequest from 'hooks/useSpotifyRequest'
-import { getCurrentlyPlaying } from 'spotify/fetch'
+import useNowPlaying, { playerFallback } from 'context/nowPlaying'
 
 import {
   SpotifyPlayer,
   defaultSpotifyPlayer,
   DeviceInfo,
-  SpotifyPlayerState,
+  SpotifyPlayerError,
 } from 'types/player'
 import withSpotify from 'hocs/withSpotify'
 
 const PlayerContainer: React.FC = (props) => {
   const { access_token, refreshTokens } = useAuth()
   const { setDeviceId } = useDevice()
+  const { refreshPlayer, nowPlaying } = useNowPlaying()
   const [player, setPlayer] = useState<SpotifyPlayer>(defaultSpotifyPlayer)
-  const [playerState, setPlayerState] = useState<SpotifyPlayerState | null>(
-    null
-  )
 
   const request = useRequest()
 
@@ -38,22 +35,20 @@ const PlayerContainer: React.FC = (props) => {
         newPlayer
           .connect()
           .then()
-          .catch((err: any) => console.log(err))
+          .catch((err: SpotifyPlayerError) => console.log(err))
 
         newPlayer.on('ready', ({ device_id }: DeviceInfo) => {
           setPlayer(newPlayer)
           setDeviceId(device_id)
-          // getCurrentlyPlaying(request).then((res) => {
-          //   console.log(res)
-          // })
+          refreshPlayer()
         })
 
-        newPlayer.on('initialization_error', (e: any) => {
+        newPlayer.on('initialization_error', (e: SpotifyPlayerError) => {
           console.error(e)
           console.warn('INITIALIZATION ERROR')
         })
 
-        newPlayer.on('authentication_error', (e: any) => {
+        newPlayer.on('authentication_error', (e: SpotifyPlayerError) => {
           console.error(e)
           console.warn('AUTHENTICATION ERROR')
           newPlayer.disconnect()
@@ -62,32 +57,23 @@ const PlayerContainer: React.FC = (props) => {
           })
         })
 
-        newPlayer.on('playback_error', (e: any) => {
+        newPlayer.on('playback_error', (e: SpotifyPlayerError) => {
           console.error(e)
           console.warn('PLAYBACK ERROR')
-        })
-
-        newPlayer.on('player_state_changed', (state: SpotifyPlayerState) => {
-          // if (state?.track_window) {
-          //   document.title = `${state.track_window.current_track.artists[0].name} - ${state.track_window.current_track.name}`
-          //   let favicon: any = document.querySelector("link[rel*='icon']")
-          //   favicon.href = state.track_window.current_track.album.images[0].url
-          // }
-          // setPlayerState(state)
         })
       }
     }
     connectToPlayer()
   }, [access_token, player._options.id, refreshTokens, request, setDeviceId])
 
-  return playerState ? (
+  return nowPlaying === playerFallback ? (
     <div className="Player">
-      <NowPlaying current_track={playerState.track_window.current_track} />
+      Nothing playing
       <AvailableDevices />
     </div>
   ) : (
     <div className="Player">
-      Nothing playing
+      <NowPlaying current_track={nowPlaying.item} />
       <AvailableDevices />
     </div>
   )
