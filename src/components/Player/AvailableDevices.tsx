@@ -73,11 +73,11 @@ const AvailableDevices: React.FC = (props) => {
       setShowList(false)
     } else {
       setIsLoading(true)
-      getUserDevices(request).then((devices) => {
-        setShowList(true)
-        setDevices(devices)
-        setIsLoading(false)
-      })
+      // getUserDevices(request).then((devices) => {
+      //   setShowList(true)
+      //   setDevices(devices)
+      //   setIsLoading(false)
+      // })
     }
   }
 

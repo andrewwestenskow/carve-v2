@@ -2,7 +2,8 @@
 
 type albumTypes = 'album' | 'single' | 'compilation'
 type precisions = 'year' | 'month' | 'day'
-interface SpotifySimplifiedAlbum {
+
+export interface SpotifySimplifiedAlbum {
   album_type: albumTypes
   artists: SpotifySimplifiedArtist[]
   available_markets: string[]
@@ -59,7 +60,7 @@ interface SpotifyArtist extends SpotifySimplifiedArtist {
 
 //-TRACKS
 
-interface SpotifySimplifiedTrack {
+export interface SpotifySimplifiedTrack {
   artists: SpotifySimplifiedArtist[]
   available_markets: string[]
   disc_number: number
@@ -78,7 +79,7 @@ interface SpotifySimplifiedTrack {
   uri: string
 }
 
-interface SpotifyTrack extends SpotifySimplifiedTrack {
+export interface SpotifyTrack extends SpotifySimplifiedTrack {
   album: SpotifySimplifiedAlbum
   artists: SpotifyArtist[]
   external_ids: SpotifyExternalId
@@ -203,6 +204,10 @@ interface SpotifyDevice {
   volume_percent: number
 }
 
+export interface SpotifyDevices {
+  devices: SpotifyDevice[]
+}
+
 //-NOW PLAYING
 
 type currentlyPlayingTypes = 'track' | 'episode' | 'ad' | 'unknown'
@@ -220,7 +225,7 @@ interface SpotifyCurrentlyPlaying {
   timestamp: number
 }
 
-interface SpotifyCurrentlyPlayingContext {
+export interface SpotifyCurrentlyPlayingContext {
   context: SpotifyContext
   currently_playing_type: currentlyPlayingTypes
   device: SpotifyDevice
@@ -234,11 +239,10 @@ interface SpotifyCurrentlyPlayingContext {
 
 //-RECENTLY PLAYED
 
-//* this is called PlayHistoryObject on the docs
-interface SpotifyRecentlyPlayed {
+export interface SpotifyHistory {
   context: SpotifyContext
   played_at: string
-  track: SpotifySimplifiedTrack
+  track: SpotifyTrack
 }
 
 //- USERS
@@ -280,7 +284,12 @@ interface SpotifyExternalUrl {
   spotify: string
 }
 
-interface SpotifyContext {}
+interface SpotifyContext {
+  external_urls: SpotifyExternalUrl
+  href: string
+  type: string
+  uri: string
+}
 
 interface SpotifyFollowers {
   href: null
@@ -303,4 +312,12 @@ interface SpotifyLinkedTrack {
 interface SpotifyExplicitSettings {
   filter_enabled: boolean
   filter_locked: boolean
+}
+
+export interface SpotifyCursorPaging<T> {
+  href: string
+  items: T[]
+  limit: number
+  next: string
+  total: number
 }

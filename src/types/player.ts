@@ -72,11 +72,12 @@ export interface SpotifyPlayerState {
   repeat_mode: 0 | 1 | 2 | 3
   shuffle: boolean
   timestamp: number
-  track_window: {
-    current_track: SpotifyTrack
-    next_tracks: SpotifyTrack[]
-    previous_tracks: SpotifyTrack[]
-  }
+  // track_window: {
+  //   current_track: SpotifyTrack
+  //   next_tracks: SpotifyTrack[]
+  //   previous_tracks: SpotifyTrack[]
+  // }
+  track_window: any
 }
 
 interface PlayerContext {

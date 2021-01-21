@@ -1,9 +1,9 @@
 import React from 'react'
-import { SpotifyTrack } from 'types/player'
+// import { SpotifyTrack } from 'types/player'
 import { JsxChild } from 'typescript'
 
 interface NowPlayingProps {
-  current_track: SpotifyTrack
+  current_track: any
 }
 
 const NowPlaying: React.FC<NowPlayingProps> = (props) => {

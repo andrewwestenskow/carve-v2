@@ -1,9 +1,9 @@
 import React from 'react'
-import { SpotifyAlbum } from 'types/player'
+import { SpotifySimplifiedAlbum } from 'types/spotify'
 import HoverWidget from 'components/widgets/HoverWidget'
 
 interface Props {
-  album: SpotifyAlbum
+  album: SpotifySimplifiedAlbum
 }
 
 const AlbumPreview: React.FC<Props> = (props) => {

@@ -1,14 +1,25 @@
-import { SpotifyAlbumPreview, RecentTrack, AvailableDevice } from 'types/player'
+import {
+  SpotifyHistory,
+  SpotifyDevices,
+  SpotifyCurrentlyPlayingContext,
+  SpotifyCursorPaging,
+  SpotifyTrack,
+  SpotifySimplifiedAlbum,
+} from 'types/spotify'
+import { Request } from 'hooks/useSpotifyRequest'
 
 const BASE_URL = 'https://api.spotify.com/v1'
 
-export const getCurrentlyPlaying = async (request: Function) => {
-  const info = await request({ url: BASE_URL + '/me/player', method: 'GET' })
+export const getCurrentlyPlaying = async (request: Request) => {
+  const info = await request<SpotifyCurrentlyPlayingContext>({
+    url: BASE_URL + '/me/player',
+    method: 'GET',
+  })
   return info
 }
 
-export const getUserDevices = async (request: Function) => {
-  const { devices }: { devices: AvailableDevice[] } = await request({
+export const getUserDevices = async (request: Request) => {
+  const { devices } = await request<SpotifyDevices>({
     url: BASE_URL + '/me/player/devices',
   })
 
@@ -16,17 +27,15 @@ export const getUserDevices = async (request: Function) => {
   return devices
 }
 
-export const getDashboardData = async (request: Function) => {
-  const { items } = await request({
+export const getDashboardData = async (request: Request) => {
+  const { items } = await request<SpotifyCursorPaging<SpotifyHistory>>({
     url: BASE_URL + '/me/player/recently-played?limit=50',
     method: 'GET',
   })
 
   const formattedRecent = items.reduce(
-    (acc: SpotifyAlbumPreview[], track: RecentTrack) => {
-      const inArray = acc.some(
-        (e: SpotifyAlbumPreview) => e.uri === track.track.album.uri
-      )
+    (acc: SpotifySimplifiedAlbum[], track: SpotifyHistory) => {
+      const inArray = acc.some((e: any) => e.uri === track.track.album.uri)
 
       if (!inArray) {
         acc.push(track.track.album)

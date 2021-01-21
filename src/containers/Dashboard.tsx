@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import AlbumPreview from 'components/AlbumPreview'
 import useSpotifyRequest from 'hooks/useSpotifyRequest'
-import { SpotifyAlbum, RecentTrack } from 'types/player'
-import { recentTracks } from 'spotify/requests'
 import { getDashboardData } from 'spotify/fetch'
+import { SpotifySimplifiedAlbum } from 'types/spotify'
 
 const DashboardContainer: React.FC = (props) => {
-  const [recentTracks, setRecentTracks] = useState<SpotifyAlbum[]>([])
+  const [recentTracks, setRecentTracks] = useState<SpotifySimplifiedAlbum[]>([])
   const request = useSpotifyRequest()
   useEffect(() => {
     getDashboardData(request)
