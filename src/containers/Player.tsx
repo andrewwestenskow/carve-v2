@@ -5,6 +5,7 @@ import AvailableDevices from 'components/Player/AvailableDevices'
 import useAuth from 'context/auth'
 import useDevice from 'context/device'
 import useRequest from 'hooks/useSpotifyRequest'
+import { getCurrentlyPlaying } from 'spotify/fetch'
 
 import {
   SpotifyPlayer,
@@ -42,6 +43,9 @@ const PlayerContainer: React.FC = (props) => {
         newPlayer.on('ready', ({ device_id }: DeviceInfo) => {
           setPlayer(newPlayer)
           setDeviceId(device_id)
+          getCurrentlyPlaying(request).then((res) => {
+            console.log(res)
+          })
         })
 
         newPlayer.on('initialization_error', (e: any) => {
@@ -64,7 +68,7 @@ const PlayerContainer: React.FC = (props) => {
         })
 
         newPlayer.on('player_state_changed', (state: SpotifyPlayerState) => {
-          if (state.track_window) {
+          if (state?.track_window) {
             document.title = `${state.track_window.current_track.artists[0].name} - ${state.track_window.current_track.name}`
             let favicon: any = document.querySelector("link[rel*='icon']")
             favicon.href = state.track_window.current_track.album.images[0].url

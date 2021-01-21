@@ -1,3 +1,5 @@
+//- Allow for necessary global variables
+
 declare global {
   interface Window {
     Spotify: any
@@ -5,19 +7,7 @@ declare global {
   }
 }
 
-export interface DeviceInfo {
-  device_id: string
-}
-
-export interface AvailableDevice {
-  id: string
-  is_active: boolean
-  is_private_session: boolean
-  name: string
-  type: string
-  volume_percent: number
-}
-
+//- Options for spotify player
 interface SpotifyPlayerOptions {
   name: string
   id: string
@@ -25,13 +15,7 @@ interface SpotifyPlayerOptions {
   volume: number
 }
 
-type playerActions =
-  | 'ready'
-  | 'initialization_error'
-  | 'authentication_error'
-  | 'account_error'
-  | 'playback_error'
-  | 'player_state_changed'
+//- Default value for player object and fallback callback
 
 const playerFallback = () => console.warn('Player state not set')
 
@@ -47,6 +31,16 @@ export const defaultSpotifyPlayer: SpotifyPlayer = {
   disconnect: async () => playerFallback(),
 }
 
+//- Player type with available actions
+
+type playerActions =
+  | 'ready'
+  | 'initialization_error'
+  | 'authentication_error'
+  | 'account_error'
+  | 'playback_error'
+  | 'player_state_changed'
+
 export interface SpotifyPlayer {
   _options: SpotifyPlayerOptions
   on: (action: playerActions, cb: Function) => void
@@ -54,35 +48,21 @@ export interface SpotifyPlayer {
   disconnect: () => Promise<void>
 }
 
-interface PlayerContext {
-  uri: string
-  metadata: { context_description: string }
+//- Returned when player is ready
+export interface DeviceInfo {
+  device_id: string
 }
 
-interface SpotifyImage {
-  height: number
-  width: number
-  url: string
-}
-
-export interface SpotifyTrack {
-  album: SpotifyTrackAlbum
-  artists: SpotifyTrackArtistPreview[]
-  duration_ms: number
+export interface AvailableDevice {
   id: string
-  is_playable: boolean
-  media_type: string
+  is_active: boolean
+  is_private_session: boolean
   name: string
   type: string
-  uri: string
+  volume_percent: number
 }
 
-interface SpotifyTrackAlbum {
-  images: SpotifyImage[]
-  name: string
-  uri: string
-}
-
+//- State returned by player_state_changed event
 export interface SpotifyPlayerState {
   bitrate: number
   context: PlayerContext
@@ -99,29 +79,33 @@ export interface SpotifyPlayerState {
   }
 }
 
-export interface RecentTrack {
-  track: SpotifyTrack
-}
-
-export interface SpotifyAlbumPreview {
+interface PlayerContext {
   uri: string
-  name: string
-  images: SpotifyImage[]
+  metadata: { context_description: string }
 }
 
-export interface SpotifyAlbum extends SpotifyAlbumPreview {
-  release_date: string
-  total_tracks: number
-  id: string
-  album_type: string
-  artists: SpotifyTrackArtist[]
-}
+type availableErrors =
+  | 'NO_PREV_TRACK'
+  | 'NO_NEXT_TRACK'
+  | 'NO_SPECIFIC_TRACK'
+  | 'ALREADY_PAUSED'
+  | 'NOT_PAUSED'
+  | 'NOT_PLAYING_LOCALLY'
+  | 'NOT_PLAYING_TRACK'
+  | 'NOT_PLAYING_CONTEXT'
+  | 'ENDLESS_CONTEXT'
+  | 'CONTEXT_DISALLOW'
+  | 'ALREADY_PLAYING'
+  | 'RATE_LIMITED'
+  | 'REMOTE_CONTROL_DISALLOW'
+  | 'DEVICE_NOT_CONTROLLABLE'
+  | 'VOLUME_CONTROL_DISALLOW'
+  | 'NO_ACTIVE_DEVICE'
+  | 'PREMIUM_REQUIRED'
+  | 'UNKNOWN'
 
-interface SpotifyTrackArtistPreview {
-  name: string
-  uri: string
-}
-
-export interface SpotifyTrackArtist extends SpotifyTrackArtistPreview {
-  id: string
+export interface SpotifyPlayerError {
+  message: string
+  reason: availableErrors
+  status: number
 }
